@@ -6,7 +6,7 @@ import hashlib
 
 USERS_FILE = "users.json"
 
-# ----------------- WEEZER ALBUMS + SONGS -----------------
+# weezer album
 weezer_albums = {
     "Weezer (Blue Album)": {
         "release": "1994-05-10", "label": "DGC", "genre": "Alternative rock",
@@ -168,7 +168,7 @@ weezer_albums = {
     }
 }
 
-# ----------------- MAIN APP CLASS -----------------
+# app
 class WeezerApp(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -186,7 +186,7 @@ class WeezerApp(tk.Tk):
 
         self.show_login_signup()
 
-    # -------- User management --------
+    # user manage
     def load_users(self):
         if os.path.exists(USERS_FILE):
             with open(USERS_FILE, "r", encoding="utf-8") as f:
@@ -200,7 +200,7 @@ class WeezerApp(tk.Tk):
     def hash_password(self, password):
         return hashlib.sha256(password.encode()).hexdigest()
 
-    # -------- Login/Sign Up --------
+    # login sign
     def show_login_signup(self):
         popup = tk.Toplevel(self)
         popup.title("Login / Sign Up")
@@ -242,7 +242,7 @@ class WeezerApp(tk.Tk):
         tk.Button(popup, text="Login", command=login).pack(pady=10)
         tk.Button(popup, text="Sign Up", command=signup).pack()
 
-    # -------- Load/Save lyrics --------
+    # load and save lyric
     def load_user_lyrics(self):
         saved = self.users.get(self.current_user, {}).get("lyrics", {})
         for album_name, album in weezer_albums.items():
@@ -262,7 +262,7 @@ class WeezerApp(tk.Tk):
         self.save_users()
         messagebox.showinfo("Saved", "All lyrics saved to your profile!")
 
-    # -------- Logout --------
+    # logout
     def logout(self):
         if messagebox.askyesno("Log Out", "Log out and save lyrics?"):
             self.save_user_lyrics()
@@ -270,7 +270,7 @@ class WeezerApp(tk.Tk):
             app = WeezerApp()
             app.mainloop()
 
-    # -------- Build main UI --------
+    # main ui
     def build_main_ui(self):
         top_frame = tk.Frame(self, bg="#0b3d91")
         top_frame.pack(fill="x", pady=(5,0))
@@ -315,7 +315,7 @@ class WeezerApp(tk.Tk):
                                     bg="#0b66d1", fg="white")
         btn_save_lyrics.pack(pady=(0,10))
 
-    # -------- Populate tree --------
+    # tree
     def populate_tree(self):
         self.tree.delete(*self.tree.get_children())
         for album, data in weezer_albums.items():
@@ -323,7 +323,7 @@ class WeezerApp(tk.Tk):
             for song in data["songs"]:
                 self.tree.insert(album_id, "end", text=song["name"])
 
-    # -------- Search with filtering --------
+    # search w filter
     def search_song(self, event=None):
         q = self.search_var.get().lower()
         self.tree.delete(*self.tree.get_children())
@@ -334,7 +334,7 @@ class WeezerApp(tk.Tk):
                 if q in name.lower():
                     self.tree.insert(album_id, "end", text=name)
 
-    # -------- Select song --------
+    # song selection
     def on_song_select(self, event):
         sel = self.tree.selection()
         if not sel:
@@ -360,7 +360,7 @@ class WeezerApp(tk.Tk):
             self.txt_lyrics.delete("1.0", "end")
             self.txt_lyrics.insert("1.0", self.selected_song.get("lyrics",""))
 
-    # -------- Save single song lyrics --------
+    # -saving lyrics
     def save_lyrics(self):
         if self.selected_song is None:
             messagebox.showwarning("No Song Selected", "Please select a song first.")
